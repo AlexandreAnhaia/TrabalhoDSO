@@ -1,0 +1,179 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.ufsc.ine5605.TelasJFrame.TelasVeiculo;
+
+import br.ufsc.ine5605.Controladores.ControladorVeiculo;
+import br.ufsc.ine5605.Entidades.Veiculo;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+/**
+ *
+ * @author Pichau
+ */
+public class TelaAlteraVeiculoJFrame extends JFrame {
+
+    private ControladorVeiculo owner;
+    private JLabel lbModelo;
+    private JTextField tfModelo;
+    private JLabel lbMarca;
+    private JTextField tfMarca;
+    private JLabel lbAno;
+    private JTextField tfAno;
+    private GerenciadorBotoes btManager;
+    private JLabel lbQuilometragemAtual;
+    private JTextField tfQuilometragemAtual;
+    private JButton btAtualizar;
+    private JButton btCancelar;
+    private Veiculo veiculo;
+    private static final String atualizar = "atualizar";
+    private static final String cancelar = "cancelar";
+
+    public TelaAlteraVeiculoJFrame(ControladorVeiculo owner) {
+        this.owner = owner;
+        this.btManager = new GerenciadorBotoes();
+        inicializa();
+    }
+
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+        this.tfModelo.setText(veiculo.getModelo());
+        this.tfMarca.setText(veiculo.getMarca());
+        this.tfAno.setText(Integer.toString(veiculo.getAno()));
+        this.tfQuilometragemAtual.setText(Double.toString(veiculo.getQuilometragemAtual()));
+
+    }
+
+    public void inicializa() {
+
+        Container container = getContentPane();
+
+        container.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        lbModelo = new JLabel();
+        lbModelo.setText("Modelo: ");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        container.add(lbModelo, constraints);
+
+        tfModelo = new JTextField();
+        tfModelo.setText("");
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        tfModelo.setPreferredSize(new Dimension(100, 20));
+        container.add(tfModelo, constraints);
+
+        lbMarca = new JLabel();
+        lbMarca.setText("Marca: ");
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        container.add(lbMarca, constraints);
+
+        tfMarca = new JTextField();
+        tfMarca.setText("");
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        tfMarca.setPreferredSize(new Dimension(100, 20));
+        container.add(tfMarca, constraints);
+
+        lbAno = new JLabel();
+        lbAno.setText("Ano: ");
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        container.add(lbAno, constraints);
+
+        tfAno = new JTextField();
+        tfAno.setText("");
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        tfAno.setPreferredSize(new Dimension(100, 20));
+        container.add(tfAno, constraints);
+
+        lbQuilometragemAtual = new JLabel();
+        lbQuilometragemAtual.setText("Quilometragem Atual: ");
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        container.add(lbQuilometragemAtual, constraints);
+
+        tfQuilometragemAtual = new JTextField();
+        tfQuilometragemAtual.setText("");
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        tfQuilometragemAtual.setPreferredSize(new Dimension(100, 20));
+        container.add(tfQuilometragemAtual, constraints);
+
+        btAtualizar = new JButton();
+        btAtualizar.setActionCommand(atualizar);
+        btAtualizar.addActionListener(btManager);
+        btAtualizar.setText("Atualizar");
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        container.add(btAtualizar, constraints);
+
+        btCancelar = new JButton();
+        btCancelar.setActionCommand(cancelar);
+        btCancelar.addActionListener(btManager);
+        btCancelar.setText("Cancelar");
+        constraints.gridx = 1;
+        constraints.gridy = 5;
+        container.add(btCancelar, constraints);
+
+        setSize(800, 400);
+        setLocationRelativeTo(null);
+
+    }
+
+    private class GerenciadorBotoes implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                if (e.getActionCommand().equals(atualizar)) {
+
+                    veiculo.setModelo(getTfModelo());
+                    veiculo.setMarca(getTfMarca());
+                    veiculo.setAno(getTfAno());
+                    veiculo.setQuilometragemAtual(getTfQuilometragemAtual());
+                    owner.alteraVeiculo(veiculo);
+                    setVisible(false);
+
+                } else if (e.getActionCommand().equals(cancelar)) {
+                    setVisible(false);
+                }
+
+            } catch (NumberFormatException erro) {
+                JOptionPane.showMessageDialog(null, "A Quilometragem e Ano Devem Conter Apenas Numeros");
+            }
+
+        }
+    }
+
+    public String getTfModelo() {
+        return tfModelo.getText();
+    }
+
+    public String getTfMarca() {
+        return tfMarca.getText();
+    }
+
+    public int getTfAno() {
+        return Integer.parseInt(tfAno.getText());
+    }
+
+    public float getTfQuilometragemAtual() {
+        return Float.parseFloat(tfQuilometragemAtual.getText());
+    }
+}
